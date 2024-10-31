@@ -1,35 +1,30 @@
-from flask import Flask, render_template, request  # Importamos Flask y funciones útiles.
+from flask import Flask, render_template, request
 import random
 import string
 
-app = Flask(__name__)  # Inicializamos la app Flask.
+app = Flask(__name__)
 
-def generar_contraseña(longitud, incluir_mayusculas=True, incluir_numeros=True, incluir_simbolos=False):
-    caracteres = string.ascii_lowercase  # Iniciamos con letras minúsculas.
-    if incluir_mayusculas:
-        caracteres += string.ascii_uppercase  # Añadimos mayúsculas si se selecciona.
-    if incluir_numeros:
-        caracteres += string.digits  # Añadimos números.
-    if incluir_simbolos:
-        caracteres += string.punctuation  # Añadimos símbolos.
+def generar_contraseña(longitud, mayusculas, numeros, simbolos):
+    caracteres = string.ascii_lowercase
+    if mayusculas:
+        caracteres += string.ascii_uppercase
+    if numeros:
+        caracteres += string.digits
+    if simbolos:
+        caracteres += string.punctuation
+    
+    return ''.join(random.choice(caracteres) for _ in range(longitud))
 
-    # Generamos la contraseña con caracteres aleatorios.
-    contraseña = ''.join(random.choice(caracteres) for _ in range(longitud))
-    return contraseña
-
-@app.route("/", methods=["GET", "POST"])  # Ruta para la página principal.
+@app.route("/", methods=["GET", "POST"])
 def index():
-    contraseña = ""  # Variable para la contraseña generada.
-    if request.method == "POST":  # Si el usuario envía el formulario:
-        longitud = int(request.form["longitud"])
-        incluir_mayusculas = "mayusculas" in request.form
-        incluir_numeros = "numeros" in request.form
-        incluir_simbolos = "simbolos" in request.form
-
-        # Llamamos a la función para generar la contraseña.
-        contraseña = generar_contraseña(longitud, incluir_mayusculas, incluir_numeros, incluir_simbolos)
-
+    contraseña = None
+    if request.method == "POST":
+        longitud = int(request.form.get("longitud"))
+        mayusculas = request.form.get("mayusculas") == "on"
+        numeros = request.form.get("numeros") == "on"
+        simbolos = request.form.get("simbolos") == "on"
+        contraseña = generar_contraseña(longitud, mayusculas, numeros, simbolos)
     return render_template("index.html", contraseña=contraseña)
 
 if __name__ == "__main__":
-    app.run(debug=True)  # Iniciamos la app en modo depuración.
+    app.run(debug=True)
