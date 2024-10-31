@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Contraseñas</title>
+</head>
+<body>
+    <h1>Generador de Contraseñas</h1>
+    <form method="POST">
+        <label for="longitud">Longitud de la contraseña:</label>
+        <input type="number" id="longitud" name="longitud" required>
+
+        <div>
+            <label><input type="checkbox" name="mayusculas"> Incluir mayúsculas</label>
+            <label><input type="checkbox" name="numeros"> Incluir números</label>
+            <label><input type="checkbox" name="simbolos"> Incluir símbolos</label>
+        </div>
+
+        <button type="submit">Generar</button>
+    </form>
+
+    {% if contraseña %}
+        <h2>Tu nueva contraseña es:</h2>
+        <p>{{ contraseña }}</p>
+    {% endif %}
+</body>
+</html>
